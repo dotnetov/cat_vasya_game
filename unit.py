@@ -18,6 +18,24 @@ class Unit(ABC):
         self.intelligence = intelligence
         self.charisma = charisma
 
+        self.spells = []
+        self.mana = 0
+
+    def add_spell(self, spell):
+        self.spells.append(spell)
+
+    def cast_spell(self, index):
+        if index < 0 or index >= len(self.spells):
+            raise IndexError("Заклинание с таким индексом не найдено")
+
+        spell = self.spells[index]
+
+        if self.mana < spell.mana_cost:
+            raise ValueError("Недостаточно маны для использования заклинания")
+
+        self.mana -= spell.mana_cost
+        return spell.cast()
+
     @abstractmethod
     def calculate_max_health(self):
         pass
