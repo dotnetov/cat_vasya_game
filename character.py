@@ -2,11 +2,56 @@ from unit import Unit
 
 
 class Character(Unit):
+    VALID_CLASSES = ("warrior", "mage", "hunter")
+
+    def __init__(
+        self,
+        strength,
+        dexterity,
+        constitution,
+        wisdom,
+        intelligence,
+        charisma,
+        character_class
+    ):
+        super().__init__(
+            strength,
+            dexterity,
+            constitution,
+            wisdom,
+            intelligence,
+            charisma
+        )
+
+        if character_class not in self.VALID_CLASSES:
+            raise ValueError("Некорректный класс персонажа")
+
+        self.character_class = character_class
+
+        self.max_health = self.calculate_max_health()
+        self.health = self.max_health
+        self.damage = self.calculate_damage()
+        self.defense = self.calculate_defense()
+
     def calculate_max_health(self):
         return int(self.constitution * 10 + self.strength / 2)
 
     def calculate_damage(self):
-        return int(self.strength * 1.5 + self.dexterity / 4)
+        if self.character_class == "warrior":
+            return int(self.strength * 2.2 + self.constitution / 3)
+
+        if self.character_class == "mage":
+            return int(self.intelligence * 2.5 + self.wisdom / 2)
+
+        if self.character_class == "hunter":
+            return int(self.dexterity * 1.9 + self.strength / 3)
 
     def calculate_defense(self):
-        return int(self.constitution * 1.5 + self.dexterity / 3)
+        if self.character_class == "warrior":
+            return int(self.constitution * 1.8 + self.strength / 4)
+
+        if self.character_class == "mage":
+            return int(self.wisdom * 1.3 + self.intelligence / 6)
+
+        if self.character_class == "hunter":
+            return int(self.dexterity * 1.6 + self.constitution / 5)
